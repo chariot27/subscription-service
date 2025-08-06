@@ -1,26 +1,24 @@
 package br.ars.subscription_service.controller;
 
-import java.util.List;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import br.ars.subscription_service.models.PlanoAssinatura;
+import br.ars.subscription_service.dto.PlanoDTO;
 import br.ars.subscription_service.service.PlanoService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/planos")
 public class PlanoController {
 
-    private final PlanoService service;
+    private final PlanoService planoService;
 
-    public PlanoController(PlanoService service) {
-        this.service = service;
+    public PlanoController(PlanoService planoService) {
+        this.planoService = planoService;
     }
 
     @GetMapping
-    public List<PlanoAssinatura> listarPlanos() {
-        return service.listarTodos();
+    public ResponseEntity<List<PlanoDTO>> listarPlanos() {
+        return ResponseEntity.ok(planoService.listarTodos());
     }
 }

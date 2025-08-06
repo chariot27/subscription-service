@@ -1,46 +1,41 @@
 package br.ars.subscription_service.controller;
 
+import br.ars.subscription_service.dto.AssinaturaDTO;
+import br.ars.subscription_service.dto.AssinaturaRequestDTO;
+import br.ars.subscription_service.service.AssinaturaService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.UUID;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import br.ars.subscription_service.models.Assinatura;
-import br.ars.subscription_service.service.AssinaturaService;
 
 @RestController
 @RequestMapping("/api/assinaturas")
 public class AssinaturaController {
 
-    private final AssinaturaService service;
+    private final AssinaturaService assinaturaService;
 
-    public AssinaturaController(AssinaturaService service) {
-        this.service = service;
+    public AssinaturaController(AssinaturaService assinaturaService) {
+        this.assinaturaService = assinaturaService;
     }
 
     @PostMapping
-    public Assinatura assinar(@RequestParam UUID userId, @RequestParam UUID planoId) {
-        return service.assinar(userId, planoId);
+    public ResponseEntity<AssinaturaDTO> assinar(@RequestBody AssinaturaRequestDTO dto) {
+        return ResponseEntity.ok(assinaturaService.assinar(dto));
     }
 
-    @GetMapping("/{userId}")
-    public List<Assinatura> listarPorUsuario(@PathVariable UUID userId) {
-        return service.listarPorUsuario(userId);
+    @GetMapping("/usuario/{userId}")
+    public ResponseEntity<List<AssinaturaDTO>> listarPorUsuario(@PathVariable UUID userId) {
+        return ResponseEntity.ok(assinaturaService.listarPorUsuario(userId));
     }
 
-    @PatchMapping("/{id}/cancelar")
-    public Assinatura cancelar(@PathVariable UUID id) {
-        return service.cancelar(id);
+    @PostMapping("/cancelar/{assinaturaId}")
+    public ResponseEntity<AssinaturaDTO> cancelar(@PathVariable UUID assinaturaId) {
+        return ResponseEntity.ok(assinaturaService.cancelar(assinaturaId));
     }
 
-    @PatchMapping("/{id}/renovar")
-    public Assinatura renovar(@PathVariable UUID id) {
-        return service.renovar(id);
+    @PostMapping("/renovar/{assinaturaId}")
+    public ResponseEntity<AssinaturaDTO> renovar(@PathVariable UUID assinaturaId) {
+        return ResponseEntity.ok(assinaturaService.renovar(assinaturaId));
     }
 }
